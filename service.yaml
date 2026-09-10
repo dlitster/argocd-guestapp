@@ -1,0 +1,15 @@
+# Desired state (in git): a ClusterIP service that fronts the guestbook pods.
+# We reach it during the workshop with `kubectl port-forward`.
+apiVersion: v1
+kind: Service
+metadata:
+  name: guestbook-ui
+  labels:
+    app: guestbook-ui
+spec:
+  selector:
+    app: guestbook-ui
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80

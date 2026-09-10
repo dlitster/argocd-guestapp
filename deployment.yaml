@@ -1,0 +1,42 @@
+# This file is DESIRED STATE. It lives in git.
+#
+# Argo CD's job is to make the cluster's ACTUAL state match what is written
+# here. Change this file + commit, and Argo CD reconciles the difference.
+#
+# We use a small nginx image instead of a heavy app so the workshop works on
+# any laptop and image pulls are fast.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guestbook-ui
+  labels:
+    app: guestbook-ui
+spec:
+  # <-- Exercise 04 has you change this number in git and watch Argo CD roll it out.
+  replicas: 2
+  selector:
+    matchLabels:
+      app: guestbook-ui
+  template:
+    metadata:
+      labels:
+        app: guestbook-ui
+    spec:
+      containers:
+        - name: guestbook-ui
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 2
+            periodSeconds: 5
